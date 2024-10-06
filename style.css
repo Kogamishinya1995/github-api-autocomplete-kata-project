@@ -1,0 +1,13 @@
+body {
+    background-color: #C4C4C4;
+}
+
+.search-input {
+width: 500px;
+height: 61px;
+font-family: Roboto;
+font-size: 48px;
+font-weight: 400;
+line-height: 56.25px;
+text-align: left;
+}
