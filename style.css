@@ -11,3 +11,17 @@ font-weight: 400;
 line-height: 56.25px;
 text-align: left;
 }
+
+.autocomplete-item {
+width: 500px;
+height: 44px;
+border: 2px solid black;
+opacity: 0px;
+background: #E3E3E3;
+font-family: Roboto;
+font-size: 30px;
+font-weight: 400;
+line-height: 35.16px;
+text-align: left;
+list-style-type: none;
+}

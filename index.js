@@ -1,45 +1,66 @@
-console.log('work!');
-
+// class Repository {
+//     constructor() {
+//         this.name = name;
+//         this.owner = owner;
+//         this.stars = stars;
+//     }
+// }
 
 async function apiGithubsearch() {
 
+    const debounce = (fn, debounceTime) => {
+        let timer;
+        return function (...args) {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            fn.apply(this, args);
+          }, debounceTime);
+        };
+      };
+
 const input = document.querySelector('.search-input');
-const listContainer = document.querySelector('.auto-complete-container');
-console.log(listContainer);
+const listContainer = document.querySelector('.autocomplete-container');
 
 function render(coll) { 
+    listContainer.innerHTML = '';
     const list = document.createElement('ul'); 
     for (const element of coll) { 
       const item = document.createElement('li'); 
       item.textContent = element; 
+      item.classList.add('autocomplete-item');
       list.appendChild(item); 
     } 
     listContainer.append(list); 
   }
 
+  async function requestToApi(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    const repos = data.items;
+    return repos;
+  } 
 
-input.addEventListener('input', async function() {
+input.addEventListener('input', debounce(async function() {
     const inputValue = this.value;
-    const requestApi = `https://api.github.com/search/repositories?q=${inputValue}`;
+    const requestUrl = `https://api.github.com/search/repositories?q=${inputValue}`;
     let result = []; 
-  
-    try {
-      const response = await fetch(requestApi);
-      const data = await response.json();
-      const repos = data.items;
+
+    const repositories = await requestToApi(requestUrl);
   
       for (let i = 0; i < 5; i++) {
-        result.push(repos[i].name);
+        if (repositories[i]) {
+        result.push(repositories[i]);
+        }
       }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  
-    render(result);
-  });
-  
 
- 
+      let names = [];
+
+      for (const element of result) {
+        names.push(element.name);
+      }
+      
+    render(names);
+  }, 400));
   
 };
 
