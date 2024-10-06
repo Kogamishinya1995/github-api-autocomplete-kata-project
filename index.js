@@ -28,6 +28,7 @@ function render(coll) {
       const item = document.createElement('li'); 
       item.textContent = element; 
       item.classList.add('autocomplete-item');
+      item.addEventListener('click', selectRepository);
       list.appendChild(item); 
     } 
     listContainer.append(list); 
@@ -61,7 +62,13 @@ input.addEventListener('input', debounce(async function() {
       
     render(names);
   }, 400));
-  
+
+  async function selectRepository(event) {
+    const clickedItem = event.currentTarget;
+    const repositoryName = clickedItem.textContent;
+    const repositorySearchResponse = await fetch(`https://api.github.com/search/repositories?q=exact:${repositoryName}`);
+    console.log(await repositorySearchResponse.json());
+  }
 };
 
 apiGithubsearch();

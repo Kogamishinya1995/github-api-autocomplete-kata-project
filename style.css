@@ -25,3 +25,7 @@ line-height: 35.16px;
 text-align: left;
 list-style-type: none;
 }
+
+.autocomplete-item:hover {
+    background-color: #65CDF9;
+}
