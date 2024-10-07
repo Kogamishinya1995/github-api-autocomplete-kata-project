@@ -21,18 +21,23 @@ async function apiGithubsearch() {
 const input = document.querySelector('.search-input');
 const listContainer = document.querySelector('.autocomplete-container');
 
-function render(coll) { 
-    listContainer.innerHTML = '';
-    const list = document.createElement('ul'); 
-    for (const element of coll) { 
-      const item = document.createElement('li'); 
-      item.textContent = element; 
-      item.classList.add('autocomplete-item');
-      item.addEventListener('click', selectRepository);
-      list.appendChild(item); 
-    } 
-    listContainer.append(list); 
-  }
+function render(coll, owners, stars) {
+  listContainer.innerHTML = ''; 
+  const list = document.createElement('ul');  
+  for (let i = 0; i < coll.length; i++) {  
+    const element = coll[i];
+    const owner = owners[i];
+    const starUrl = stars[i];
+    const item = document.createElement('li');  
+    item.textContent = element;  
+    item.classList.add('autocomplete-item'); 
+    item.dataset.owner = owner;
+    item.dataset.stars = starUrl; 
+    item.addEventListener('click', selectRepository); 
+    list.appendChild(item);  
+  }  
+  listContainer.append(list);  
+}
 
   async function requestToApi(url) {
     const response = await fetch(url);
@@ -44,7 +49,7 @@ function render(coll) {
 input.addEventListener('input', debounce(async function() {
     const inputValue = this.value;
     const requestUrl = `https://api.github.com/search/repositories?q=${inputValue}`;
-    let result = []; 
+    let result = []
 
     const repositories = await requestToApi(requestUrl);
   
@@ -55,19 +60,28 @@ input.addEventListener('input', debounce(async function() {
       }
 
       let names = [];
+      let owners = [];
+      let stars = [];
 
       for (const element of result) {
         names.push(element.name);
+        owners.push(element.owner.login);
+        stars.push(element.stargazers_count);
       }
-      
-    render(names);
+
+      render(names, owners, stars); 
+
   }, 400));
 
-  async function selectRepository(event) {
+
+
+
+  function selectRepository(event) {
     const clickedItem = event.currentTarget;
     const repositoryName = clickedItem.textContent;
-    const repositorySearchResponse = await fetch(`https://api.github.com/search/repositories?q=exact:${repositoryName}`);
-    console.log(await repositorySearchResponse.json());
+    const ownerName = clickedItem.getAttribute('data-owner');
+    const stars = clickedItem.getAttribute('data-stars');
+    console.log(repositoryName, ownerName, stars);
   }
 };
 
