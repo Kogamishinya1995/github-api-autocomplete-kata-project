@@ -1,11 +1,3 @@
-// class Repository {
-//     constructor() {
-//         this.name = name;
-//         this.owner = owner;
-//         this.stars = stars;
-//     }
-// }
-
 async function apiGithubsearch() {
 
     const debounce = (fn, debounceTime) => {
@@ -23,7 +15,7 @@ const listContainer = document.querySelector('.autocomplete-container');
 const selectedRepoContainer = document.querySelector('.selected-repo-container');
 
 function render(coll, owners, stars) {
-  listContainer.innerHTML = ''; 
+  listContainer.textContent = ''; 
   const list = document.createElement('ul');  
   for (let i = 0; i < coll.length; i++) {  
     const element = coll[i];
@@ -82,13 +74,25 @@ input.addEventListener('input', debounce(async function() {
     const stars = clickedItem.getAttribute('data-stars');
     const selectedList = document.createElement('ul');
     const selecteditem = document.createElement('li');
+    const selecteditemText = document.createElement('p');
     selecteditem .classList.add('selected-item'); 
     selecteditem.innerText = `Name: ${repositoryName}
     Owner: ${ownerName}
-    Stars: ${stars}`
+    Stars: ${stars}`;
+    const removeButton = document.createElement('button');
+    removeButton.classList.add('remove-button');
+    removeButton.textContent = 'X';
+    selecteditem.appendChild(selecteditemText);
+    selecteditem.appendChild(removeButton);
     selectedList.appendChild(selecteditem);
     selectedRepoContainer.appendChild(selectedList);
-    listContainer.innerHTML = ''; 
+
+    removeButton.addEventListener('click', (event) => {
+      selecteditem.remove();
+    });
+    
+    listContainer.textContent = '';
+    input.value = '';
   }
 };
 
