@@ -29,3 +29,16 @@ list-style-type: none;
 .autocomplete-item:hover {
     background-color: #65CDF9;
 }
+
+.selected-item {
+    list-style-type: none;
+    width: 503px;
+    height: 101px;
+    border: 2px solid black;
+    background: #E27BEB;
+    font-family: Roboto;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 28.13px;
+    text-align: left;
+}

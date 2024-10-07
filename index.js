@@ -20,6 +20,7 @@ async function apiGithubsearch() {
 
 const input = document.querySelector('.search-input');
 const listContainer = document.querySelector('.autocomplete-container');
+const selectedRepoContainer = document.querySelector('.selected-repo-container');
 
 function render(coll, owners, stars) {
   listContainer.innerHTML = ''; 
@@ -74,14 +75,20 @@ input.addEventListener('input', debounce(async function() {
   }, 400));
 
 
-
-
   function selectRepository(event) {
     const clickedItem = event.currentTarget;
     const repositoryName = clickedItem.textContent;
     const ownerName = clickedItem.getAttribute('data-owner');
     const stars = clickedItem.getAttribute('data-stars');
-    console.log(repositoryName, ownerName, stars);
+    const selectedList = document.createElement('ul');
+    const selecteditem = document.createElement('li');
+    selecteditem .classList.add('selected-item'); 
+    selecteditem.innerText = `Name: ${repositoryName}
+    Owner: ${ownerName}
+    Stars: ${stars}`
+    selectedList.appendChild(selecteditem);
+    selectedRepoContainer.appendChild(selectedList);
+    listContainer.innerHTML = ''; 
   }
 };
 
