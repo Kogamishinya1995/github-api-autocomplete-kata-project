@@ -83,8 +83,7 @@ input.addEventListener('input', debounce(async function() {
   
     const selectedItem = document.createElement('li');
     selectedItem.classList.add('selected-item');
-    selectedItem.dataset.repository = repositoryName; // Add data-repository attribute
-  
+    selectedItem.dataset.repository = repositoryName;
     const selectedItemText = document.createElement('p');
     selectedItemText.innerText = `Name: ${repositoryName}
     Owner: ${ownerName}
