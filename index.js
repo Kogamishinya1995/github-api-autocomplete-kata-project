@@ -1,18 +1,20 @@
-async function apiGithubsearch() {
+const debounce = (fn, debounceTime) => {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, debounceTime);
+  };
+};
 
-    const debounce = (fn, debounceTime) => {
-        let timer;
-        return function (...args) {
-          clearTimeout(timer);
-          timer = setTimeout(() => {
-            fn.apply(this, args);
-          }, debounceTime);
-        };
-      };
+
+
+async function apiGithubsearch() {
 
 const input = document.querySelector('.search-input');
 const listContainer = document.querySelector('.autocomplete-container');
-const selectedRepoContainer = document.querySelector('.selected-repo-container');
+const selectedRepoList = document.querySelector('.selected-repo-list');
 
 function render(coll, owners, stars) {
   listContainer.textContent = ''; 
@@ -72,25 +74,34 @@ input.addEventListener('input', debounce(async function() {
     const repositoryName = clickedItem.textContent;
     const ownerName = clickedItem.getAttribute('data-owner');
     const stars = clickedItem.getAttribute('data-stars');
-    const selectedList = document.createElement('ul');
-    const selecteditem = document.createElement('li');
-    const selecteditemText = document.createElement('p');
-    selecteditem .classList.add('selected-item'); 
-    selecteditem.innerText = `Name: ${repositoryName}
+  
+    const existingItem = document.querySelector(`li[data-repository="${repositoryName}"]`);
+    if (existingItem) {
+      alert('Sorry, this repository has already been added to the list, you cannot add it again.');
+      return;
+    }
+  
+    const selectedItem = document.createElement('li');
+    selectedItem.classList.add('selected-item');
+    selectedItem.dataset.repository = repositoryName; // Add data-repository attribute
+  
+    const selectedItemText = document.createElement('p');
+    selectedItemText.innerText = `Name: ${repositoryName}
     Owner: ${ownerName}
     Stars: ${stars}`;
+  
     const removeButton = document.createElement('button');
     removeButton.classList.add('remove-button');
     removeButton.textContent = 'X';
-    selecteditem.appendChild(selecteditemText);
-    selecteditem.appendChild(removeButton);
-    selectedList.appendChild(selecteditem);
-    selectedRepoContainer.appendChild(selectedList);
-
-    removeButton.addEventListener('click', (event) => {
-      selecteditem.remove();
+  
+    selectedItem.appendChild(selectedItemText);
+    selectedItem.appendChild(removeButton);
+    selectedRepoList.appendChild(selectedItem);
+  
+    removeButton.addEventListener('click', () => {
+      selectedItem.remove();
     });
-    
+  
     listContainer.textContent = '';
     input.value = '';
   }
